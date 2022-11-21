@@ -1,8 +1,16 @@
 const reader = new FileReader();
-const filePicker = document.getElementById("file-picker");
-filePicker.addEventListener("change", ({ target }) => {
-  reader.addEventListener("load", ({ target }) => {
-    console.log(target.result);
-  });
-  reader.readAsText(target.files[0]);
+reader.addEventListener("load", ({ target }) => {
+  console.log(target.result);
 });
+const filePickerBtn = document.getElementById("file-picker");
+
+filePickerBtn.addEventListener("change", ({ target }) => {
+  const file = target.files[0];
+  updateFileNameUI(file.name)
+  reader.readAsText(file);
+
+});
+function updateFileNameUI(name){
+  document.getElementById("file-name").innerText = `Editing: ${name}`;
+}
+// const fileSaveBtn = document.getElementById("save-file-button");

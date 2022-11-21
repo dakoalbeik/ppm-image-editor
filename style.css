@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Calibri, serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background: aliceblue;
+}
+
+#top-bar {
+    height: 5rem;
+    background: deepskyblue;
+    display: flex;
+    align-items: center;
+}
+
+#buttons {
+    width: 20rem;
+    height: 80%;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-left: 1px solid #e3e3e3;
+}
+
+#buttons > * {
+    height: 2.5rem;
+    width: 7rem;
+    border: none;
+    outline: none;
+    background: antiquewhite;
+    border-radius: 5px;
+    display: grid;
+    place-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition-duration: 150ms;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+#buttons > *:hover {
+    background: rgba(250, 235, 215, 0.88);
+}
+
+#buttons > *:active {
+    outline: 2px solid red;
+}
+
+#file-name {
+    margin-left: 2rem;
+    color: white;
+}
+
+
+#file-picker-input{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+#save-file-button {
+
+}
+
+#canvas {
+
+}
