@@ -1,8 +1,10 @@
+import PixelImage from "./PixelImage.js";
+
 const reader = new FileReader();
 let currentImgFile = null;
 reader.addEventListener("load", ({ target }) => {
   const data = target.result.split(/\s+/)
-  console.log(data)
+  currentImgFile = new PixelImage(data)
 
 });
 const filePickerBtn = document.getElementById("file-picker");
