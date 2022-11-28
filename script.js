@@ -1,6 +1,9 @@
 const reader = new FileReader();
+let currentImgFile = null;
 reader.addEventListener("load", ({ target }) => {
-  console.log(target.result);
+  const data = target.result.split(/\s+/)
+  console.log(data)
+
 });
 const filePickerBtn = document.getElementById("file-picker");
 
