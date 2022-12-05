@@ -4,11 +4,21 @@ const reader = new FileReader();
 let fileName = ""
 let currentImgFile = null;
 
-reader.addEventListener("load", ({ target }) => {
-  handleImageLoad(target.result)
-});
-
+const fileSaveBtn = document.getElementById("save-file-button")
 const filePickerBtn = document.getElementById("file-picker");
+
+fileSaveBtn.addEventListener('click', (e) => {
+  saveImage(currentImgFile).then()
+})
+
+reader.addEventListener("load", ({ target }) => {
+  try {
+    handleImageLoad(target.result)
+    fileSaveBtn.removeAttribute("disabled")
+  } catch (e) {
+
+  }
+});
 
 filePickerBtn.addEventListener("change", ({ target }) => {
   const file = target.files[0];
@@ -33,20 +43,14 @@ function handleImageLoad(rawTextData){
 
 }
 
-
-document.addEventListener('keydown', (e)=>{
-  if(e.key === "Enter") saveImage(currentImgFile).then()
-})
-
 async function saveImage(pixelImage){
   try {
-    const fileHandle = await window.showSaveFilePicker({
-      suggestedName: `${fileName}`});
+    const fileHandle = await window.showSaveFilePicker({suggestedName: `${fileName}`});
     const fileStream = await fileHandle.createWritable();
     await fileStream.write(new Blob([pixelImage.toString()], {type: "text/plain"}));
     await fileStream.close();
+    alert(`${fileName} saved locally!`)
   } catch (e) {
 
   }
 }
-// const fileSaveBtn = document.getElementById("save-file-button");

@@ -79,3 +79,11 @@ body {
     flex-grow: 1;
     overflow: auto;
 }
+
+#buttons button:disabled {
+    background: hsl(170, 50%, 60%);
+    cursor: not-allowed;
+}
+#buttons button:disabled:active {
+    outline: none;
+}

@@ -14,7 +14,7 @@ export default class PixelImage {
     /**
      * @type { Uint8ClampedArray }
      */
-    #rawDataAlpha = null;
+    #clampedArray = null;
     constructor(rawData) {
         this.parseRawData(rawData)
     }
@@ -25,9 +25,7 @@ export default class PixelImage {
         const { WIDTH_IDX, HEIGHT_IDX, MAX_COLOR_IDX } = PixelImage;
         try {
             if(data[0] !== PixelImage.PPM_TYPE) throw new Error('Invalid type')
-            /**
-             * @type {[]}
-             */
+
             // keep only numbers in the array
             const cleanData = data.filter((string) => this.#onlyContainsDigits(string))
             this.#width = parseInt(cleanData[WIDTH_IDX]);
@@ -47,7 +45,7 @@ export default class PixelImage {
 
     #setRows(data){
             this.#rawData = data.map((numberStr) => parseInt(numberStr))
-            this.#rawDataAlpha = new Uint8ClampedArray(this.#rawData.reduce((accumulator, current, index) => {
+            this.#clampedArray = new Uint8ClampedArray(this.#rawData.reduce((accumulator, current, index) => {
                 // push a value of 1 every 3 iterations including the last one
                 if(index !== 0 && index % 3 === 0) accumulator.push(255)
                 accumulator.push(current)
@@ -72,9 +70,7 @@ export default class PixelImage {
             this.#rows.push(pixelArray)
     }
 
-    getImageData = () => new ImageData(this.#rawDataAlpha, this.#width, this.#height);
-
-    getPixelRows = () => this.#rows;
+    getImageData = () => new ImageData(this.#clampedArray, this.#width, this.#height);
 
     getDimensions = () => ({width: this.#width, height: this.#height})
 
