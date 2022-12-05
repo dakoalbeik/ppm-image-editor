@@ -6,4 +6,8 @@ export default class PixelArray {
     push(pixel){
         this.row.push(pixel)
     }
+
+    update(index, value) {
+        this.row[index] = value;
+    }
 }
