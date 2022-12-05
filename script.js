@@ -3,8 +3,8 @@ import PixelImage from "./PixelImage.js";
 const reader = new FileReader();
 let currentImgFile = null;
 reader.addEventListener("load", ({ target }) => {
-  const data = target.result.split(/\s+/)
-  currentImgFile = new PixelImage(data)
+
+  currentImgFile = new PixelImage(target.result)
 
 });
 const filePickerBtn = document.getElementById("file-picker");

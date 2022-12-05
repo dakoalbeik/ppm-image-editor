@@ -10,46 +10,65 @@ export default class PixelImage {
     #height = null;
     #maxColorVal = null;
     #rows = [];
+    #rawData = null;
+    #rawDataAlpha = null;
     constructor(rawData) {
         this.parseRawData(rawData)
     }
 
-    parseRawData(rawData) {
-        console.log(rawData)
-        const {WIDTH_IDX, HEIGHT_IDX, MAX_COLOR_IDX} = PixelImage;
+    parseRawData(rawTextData) {
+        // split the string at white space, and remove white space
+        const data = rawTextData.split(/\s+/)
+        const { WIDTH_IDX, HEIGHT_IDX, MAX_COLOR_IDX } = PixelImage;
         try {
-            if(rawData[0] !== PixelImage.PPM_TYPE) throw new Error('Invalid type')
+            if(data[0] !== PixelImage.PPM_TYPE) throw new Error('Invalid type')
+            /**
+             * @type {[]}
+             */
             // keep only numbers in the array
-            const cleanData = rawData.filter((string) => this.#onlyContainsDigits(string))
+            const cleanData = data.filter((string) => this.#onlyContainsDigits(string))
             this.#width = parseInt(cleanData[WIDTH_IDX]);
             this.#height = parseInt(cleanData[HEIGHT_IDX]);
             this.#maxColorVal = parseInt(cleanData[MAX_COLOR_IDX]);
 
-            console.log(this.#width, this.#height)
+            console.log({WIDTH: this.#width, HEIGHT: this.#height})
             if(this.#areMembersInvalid()) throw new Error("Missing critical file information!")
             cleanData.splice(0, 3);
             console.log(cleanData)
             this.#setRows(cleanData)
 
             console.log(this.#rows)
+            console.log(this.#rawData)
 
         } catch (e) {
-            
+            throw e;
         }
         
     }
 
     #setRows(data){
+            this.#rawData = data.map((numberStr) => parseInt(numberStr))
+            this.#rawDataAlpha = new Uint8ClampedArray(this.#rawData.reduce((accumulator, current, index) => {
+                // push a value of 1 every 3 iterations including the last one
+                if(index !== 0 && index % 3 === 0) accumulator.push(1)
+                accumulator.push(current)
+                if(this.#rawData.length - 1 === index) accumulator.push(1);
+                return accumulator;
+            }, []))
+            console.log(this.#rawDataAlpha)
             let counter = 0;
             let currentPixelIndex = 0;
             let pixelArray = new PixelArray()
-            while (counter < data.length){
+            while (counter < this.#rawData.length){
                 // skip pushing an array the first time
                 if(counter !== 0 && counter % this.#width === 0){
                     this.#rows.push(pixelArray)
                     currentPixelIndex = 0;
                 }
-                pixelArray.update(currentPixelIndex++, new Pixel(data[counter++], data[counter++], data[counter++]));
+                const R = this.#rawData[counter++];
+                const G = this.#rawData[counter++];
+                const B = this.#rawData[counter++];
+                pixelArray.update(currentPixelIndex++, new Pixel(R, G, B));
             }
             this.#rows.push(pixelArray)
 
@@ -57,5 +76,5 @@ export default class PixelImage {
 
     #onlyContainsDigits = (string) => /^\d+$/.test(string);
 
-    #areMembersInvalid = () => this.#width === null || this.#height === null || this.#maxColorVal === null
+    #areMembersInvalid = () =>  isNaN(this.#width) || isNaN(this.#height) || isNaN(this.#maxColorVal)
 }
