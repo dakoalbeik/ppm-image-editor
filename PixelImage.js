@@ -11,6 +11,9 @@ export default class PixelImage {
     #maxColorVal = null;
     #rows = [];
     #rawData = null;
+    /**
+     * @type { Uint8ClampedArray }
+     */
     #rawDataAlpha = null;
     constructor(rawData) {
         this.parseRawData(rawData)
@@ -34,11 +37,7 @@ export default class PixelImage {
             console.log({WIDTH: this.#width, HEIGHT: this.#height})
             if(this.#areMembersInvalid()) throw new Error("Missing critical file information!")
             cleanData.splice(0, 3);
-            console.log(cleanData)
             this.#setRows(cleanData)
-
-            console.log(this.#rows)
-            console.log(this.#rawData)
 
         } catch (e) {
             throw e;
@@ -55,14 +54,14 @@ export default class PixelImage {
                 if(this.#rawData.length - 1 === index) accumulator.push(1);
                 return accumulator;
             }, []))
-            console.log(this.#rawDataAlpha)
             let counter = 0;
             let currentPixelIndex = 0;
             let pixelArray = new PixelArray()
             while (counter < this.#rawData.length){
                 // skip pushing an array the first time
-                if(counter !== 0 && counter % this.#width === 0){
+                if(counter !== 0 && (counter / 3) % this.#width === 0){
                     this.#rows.push(pixelArray)
+                    pixelArray = new PixelArray()
                     currentPixelIndex = 0;
                 }
                 const R = this.#rawData[counter++];
@@ -71,8 +70,13 @@ export default class PixelImage {
                 pixelArray.update(currentPixelIndex++, new Pixel(R, G, B));
             }
             this.#rows.push(pixelArray)
-
     }
+
+    getImageData = () => new ImageData(this.#rawDataAlpha, this.#width, this.#height);
+
+    getPixelRows = () => this.#rows;
+
+    getDimensions = () => ({width: this.#width, height: this.#height})
 
     #onlyContainsDigits = (string) => /^\d+$/.test(string);
 
