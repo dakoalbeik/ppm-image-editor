@@ -23,20 +23,11 @@ function handleImageLoad(rawTextData){
   currentImgFile = new PixelImage(rawTextData)
   const { width, height } = currentImgFile.getDimensions();
   const canvas = document.getElementById("canvas")
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
+  canvas.width = width;
+  canvas.height = height;
   const ctx = canvas.getContext("2d");
-  // TODO: figure out why that's not working
-  // const imageData = currentImgFile.getImageData()
-  // ctx.putImageData(imageData, 0, 0)
-  const rows = currentImgFile.getPixelRows();
-  for(let row = 0; row < height; row++){
-    const pixelArray = rows[row];
-    for(let col = 0; col < width; col++){
-      const pixel = pixelArray.row[col]
-      ctx.fillStyle = `rgb(${pixel.r}, ${pixel.g}, ${pixel.b})`
-      ctx.fillRect(row, col, 1, 1)
-    }
-  }
+  const imageData = currentImgFile.getImageData()
+  ctx.putImageData(imageData, 0, 0);
+
 }
 // const fileSaveBtn = document.getElementById("save-file-button");

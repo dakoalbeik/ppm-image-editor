@@ -49,9 +49,9 @@ export default class PixelImage {
             this.#rawData = data.map((numberStr) => parseInt(numberStr))
             this.#rawDataAlpha = new Uint8ClampedArray(this.#rawData.reduce((accumulator, current, index) => {
                 // push a value of 1 every 3 iterations including the last one
-                if(index !== 0 && index % 3 === 0) accumulator.push(1)
+                if(index !== 0 && index % 3 === 0) accumulator.push(255)
                 accumulator.push(current)
-                if(this.#rawData.length - 1 === index) accumulator.push(1);
+                if(this.#rawData.length - 1 === index) accumulator.push(255);
                 return accumulator;
             }, []))
             let counter = 0;
