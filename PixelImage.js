@@ -80,5 +80,18 @@ export default class PixelImage {
 
     #onlyContainsDigits = (string) => /^\d+$/.test(string);
 
-    #areMembersInvalid = () =>  isNaN(this.#width) || isNaN(this.#height) || isNaN(this.#maxColorVal)
+    toString() {
+        let string = ""
+        string += PixelImage.PPM_TYPE + "\n";
+        string += `${this.#width} ${this.#height} ${this.#maxColorVal} `
+        for (const pixelArray of this.#rows){
+            for(const col of pixelArray.row){
+                const {r, g, b} = col;
+                string += `${r} ${g} ${b} `;
+            }
+        }
+        return string;
+    }
+
+    #areMembersInvalid = () =>  isNaN(this.#width) || isNaN(this.#height) || isNaN(this.#maxColorVal);
 }
