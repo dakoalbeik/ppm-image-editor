@@ -7,7 +7,7 @@ let currentImgFile = null;
 document.addEventListener("keydown", (e)=>{
   if(e.key === "Enter"){
     console.log("FlipY")
-    currentImgFile.flipY()
+    currentImgFile.flipX()
     draw()
   }
 })

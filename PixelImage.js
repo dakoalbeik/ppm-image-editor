@@ -104,6 +104,18 @@ export default class PixelImage {
     }
   }
 
+
+  flipX(){
+    for(let i = 0; i < Math.floor(this.#rows.length / 2); i++){
+      for(let j = 0; j < this.#width; j++){
+        const {r, g, b} = this.#rows[i].row[j].getColor();
+        const {r: _r, g: _g, b: _b} = this.#rows[this.#rows.length - i - 1].row[j].getColor();
+        this.#rows[this.#rows.length - i - 1].row[j].setColor({r, g, b})
+        this.#rows[i].row[j].setColor({r: _r, g: _g, b: _b})
+      }
+    }
+  }
+
   forEach(callback){
     for (const pixelArray of this.#rows) {
       for (const pixel of pixelArray.row) {
