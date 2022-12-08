@@ -93,6 +93,25 @@ export default class PixelImage {
     return string;
   }
 
+  flipY(){
+    for(let i = 0; i < this.#rows.length; i++){
+      for(let j = 0; j < Math.floor(this.#width / 2); j++){
+        const {r, g, b} = this.#rows[i].row[j].getColor();
+        const {r: _r, g: _g, b: _b} = this.#rows[i].row[this.#width - j - 1].getColor();
+        this.#rows[i].row[this.#width - j - 1].setColor({r, g, b})
+        this.#rows[i].row[j].setColor({r: _r, g: _g, b: _b})
+      }
+    }
+  }
+
+  forEach(callback){
+    for (const pixelArray of this.#rows) {
+      for (const pixel of pixelArray.row) {
+        callback(pixel)
+      }
+    }
+  }
+
   #areMembersInvalid = () =>
     isNaN(this.#width) || isNaN(this.#height) || isNaN(this.#maxColorVal);
 }

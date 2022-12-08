@@ -4,6 +4,14 @@ const reader = new FileReader();
 let fileName = "";
 let currentImgFile = null;
 
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){
+    console.log("FlipY")
+    currentImgFile.flipY()
+    draw()
+  }
+})
+
 const css_classes = {
   NO_FILE_SELECTED: 'no-file-selected'
 }
@@ -37,6 +45,10 @@ function updateFileNameUI(name) {
 
 function handleImageLoad(rawTextData) {
   currentImgFile = new PixelImage(rawTextData);
+  draw();
+}
+
+function draw(){
   const { width, height } = currentImgFile.getDimensions();
   canvas.width = width;
   canvas.height = height;

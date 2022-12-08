@@ -5,9 +5,13 @@ export default class Pixel {
     this.b = b;
   }
 
-  set({ r, g, b }) {
+  setColor({ r, g, b }) {
     if (r) this.r = r;
     if (g) this.g = g;
     if (b) this.b = b;
+  }
+
+  getColor(){
+    return {r: this.r, g: this.g, b: this.b}
   }
 }
