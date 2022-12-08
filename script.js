@@ -4,6 +4,9 @@ const reader = new FileReader();
 let fileName = "";
 let currentImgFile = null;
 
+const css_classes = {
+  NO_FILE_SELECTED: 'no-file-selected'
+}
 const fileSaveBtn = document.getElementById("save-file-button");
 const filePickerBtn = document.getElementById("file-picker");
 const canvas = document.getElementById("canvas");
@@ -18,6 +21,7 @@ reader.addEventListener("load", ({ target }) => {
   try {
     handleImageLoad(target.result);
     fileSaveBtn.removeAttribute("disabled");
+    canvas.parentElement.classList.remove(css_classes.NO_FILE_SELECTED)
   } catch (e) {}
 });
 
@@ -62,3 +66,4 @@ async function saveImage(pixelImage) {
     alert(`${fileName} saved locally!`);
   } catch (e) {}
 }
+

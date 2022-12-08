@@ -83,3 +83,11 @@ body {
 #buttons button:disabled:active {
   outline: none;
 }
+
+#content.no-file-selected canvas {
+  display: none;
+}
+
+#content:not(.no-file-selected) #no-file-sign {
+  display: none;
+}

@@ -10,13 +10,13 @@ export default class PixelImage {
   #height = null;
   #maxColorVal = null;
   #rows = [];
-  #rawData = null;
-  /**
-   * @type { Uint8ClampedArray }
-   */
-  #clampedArray = null;
+
   constructor(rawData) {
-    this.parseRawData(rawData);
+    try{
+      this.parseRawData(rawData);
+    } catch (e) {
+      alert(e)
+    }
   }
 
   parseRawData(rawTextData) {
@@ -24,7 +24,8 @@ export default class PixelImage {
     const data = rawTextData.split(/\s+/);
     const { WIDTH_IDX, HEIGHT_IDX, MAX_COLOR_IDX } = PixelImage;
     try {
-      if (data[0] !== PixelImage.PPM_TYPE) throw new Error("Invalid type");
+
+      if (!data.includes(PixelImage.PPM_TYPE)) throw new Error("Invalid type");
 
       // keep only numbers in the array
       const cleanData = data.filter((string) =>
@@ -34,7 +35,6 @@ export default class PixelImage {
       this.#height = parseInt(cleanData[HEIGHT_IDX]);
       this.#maxColorVal = parseInt(cleanData[MAX_COLOR_IDX]);
 
-      console.log({ WIDTH: this.#width, HEIGHT: this.#height });
       if (this.#areMembersInvalid())
         throw new Error("Missing critical file information!");
       cleanData.splice(0, 3);
@@ -45,36 +45,36 @@ export default class PixelImage {
   }
 
   #setRows(data) {
-    this.#rawData = data.map((numberStr) => parseInt(numberStr));
-    this.#clampedArray = new Uint8ClampedArray(
-      this.#rawData.reduce((accumulator, current, index) => {
-        // push a value of 1 every 3 iterations including the last one
-        if (index !== 0 && index % 3 === 0) accumulator.push(255);
-        accumulator.push(current);
-        if (this.#rawData.length - 1 === index) accumulator.push(255);
-        return accumulator;
-      }, [])
-    );
+    const pixelList = data.map((numberStr) => parseInt(numberStr));
+
     let counter = 0;
     let currentPixelIndex = 0;
     let pixelArray = new PixelArray();
-    while (counter < this.#rawData.length) {
+    while (counter < pixelList.length) {
       // skip pushing an array the first time
       if (counter !== 0 && (counter / 3) % this.#width === 0) {
         this.#rows.push(pixelArray);
         pixelArray = new PixelArray();
         currentPixelIndex = 0;
       }
-      const R = this.#rawData[counter++];
-      const G = this.#rawData[counter++];
-      const B = this.#rawData[counter++];
+      const R = pixelList[counter++];
+      const G = pixelList[counter++];
+      const B = pixelList[counter++];
       pixelArray.update(currentPixelIndex++, new Pixel(R, G, B));
     }
     this.#rows.push(pixelArray);
   }
 
-  getImageData = () =>
-    new ImageData(this.#clampedArray, this.#width, this.#height);
+  getImageData = () => {
+    const ALPHA = 255;
+    const pixels = []
+    for (const row of this.#rows){
+      for (const pixel of row.row){
+        pixels.push(pixel.r, pixel.g, pixel.b, ALPHA)
+      }
+    }
+    return new ImageData(new Uint8ClampedArray(pixels), this.#width, this.#height);
+  }
 
   getDimensions = () => ({ width: this.#width, height: this.#height });
 
