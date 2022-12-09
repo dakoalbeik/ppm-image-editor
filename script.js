@@ -4,43 +4,6 @@ const reader = new FileReader();
 let fileName = "";
 let currentImgFile = null;
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    console.log("FlipY");
-    currentImgFile.rotateClockwise90();
-    draw();
-  }
-});
-
-function generateToolsUI(image) {
-  const buttons = [{ text: "-180", onclick: image.rotateClockwise90 }];
-}
-
-function getCallbacks(image) {
-  return [
-    image.rotateClockwise90,
-    image.rotateClockwise90,
-    image.rotateClockwise90,
-    image.rotateClockwise90,
-    image.rotateClockwise90,
-    image.rotateClockwise90,
-  ];
-}
-
-function addEventListeners(image) {
-  let callbacks = getCallbacks(image);
-  const toolButtons = [...document.getElementById("tools").children];
-  toolButtons.forEach((htmlElem, i) => {
-    htmlElem.removeEventListener(callbacks[i]);
-  });
-  toolButtons.forEach((htmlElem, i) => {
-    htmlElem.addEventListener("click", () => {
-      callbacks[i]();
-      draw();
-    });
-  });
-}
-
 const css_classes = {
   NO_FILE_SELECTED: "no-file-selected",
 };
@@ -75,8 +38,29 @@ function updateFileNameUI(name) {
 
 function handleImageLoad(rawTextData) {
   currentImgFile = new PixelImage(rawTextData);
-  addEventListeners(currentImgFile);
+  generateToolsUI(currentImgFile);
   draw();
+}
+
+function generateToolsUI(image) {
+  const tools = document.getElementById("tools");
+  tools.innerHTML = "";
+  const buttons = [
+    { text: "-90", onclick: image.rotateCounterClockwise90 },
+    { text: "+180", onclick: image.rotate180 },
+    { text: "+90", onclick: image.rotateClockwise90 },
+    { text: "Flip Vertically", onclick: image.flipY },
+    { text: "Flip Horizontally", onclick: image.flipX },
+  ];
+  buttons.forEach((button) => {
+    const buttonElem = document.createElement("button");
+    buttonElem.innerText = button.text;
+    buttonElem.addEventListener("click", () => {
+      button.onclick();
+      draw();
+    });
+    tools.appendChild(buttonElem);
+  });
 }
 
 function draw() {

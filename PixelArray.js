@@ -3,10 +3,6 @@ export default class PixelArray {
     this.row = row;
   }
 
-  getLength(){
-    return this.row.length;
-  }
-
   push(pixel) {
     this.row.push(pixel);
   }

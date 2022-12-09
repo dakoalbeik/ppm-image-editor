@@ -12,10 +12,10 @@ export default class PixelImage {
   #rows = [];
 
   constructor(rawData) {
-    try{
+    try {
       this.parseRawData(rawData);
     } catch (e) {
-      alert(e)
+      alert(e);
     }
   }
 
@@ -24,7 +24,6 @@ export default class PixelImage {
     const data = rawTextData.split(/\s+/);
     const { WIDTH_IDX, HEIGHT_IDX, MAX_COLOR_IDX } = PixelImage;
     try {
-
       if (!data.includes(PixelImage.PPM_TYPE)) throw new Error("Invalid type");
 
       // keep only numbers in the array
@@ -67,14 +66,18 @@ export default class PixelImage {
 
   getImageData = () => {
     const ALPHA = 255;
-    const pixels = []
-    for (const row of this.#rows){
-      for (const pixel of row.row){
-        pixels.push(pixel.r, pixel.g, pixel.b, ALPHA)
+    const pixels = [];
+    for (const row of this.#rows) {
+      for (const pixel of row.row) {
+        pixels.push(pixel.r, pixel.g, pixel.b, ALPHA);
       }
     }
-    return new ImageData(new Uint8ClampedArray(pixels), this.#width, this.#height);
-  }
+    return new ImageData(
+      new Uint8ClampedArray(pixels),
+      this.#width,
+      this.#height
+    );
+  };
 
   getDimensions = () => ({ width: this.#width, height: this.#height });
 
@@ -93,79 +96,67 @@ export default class PixelImage {
     return string;
   }
 
-  flipY(){
-    for(let i = 0; i < this.#rows.length; i++){
-      for(let j = 0; j < Math.floor(this.#width / 2); j++){
-        const {r, g, b} = this.#rows[i].row[j].getColor();
-        const {r: _r, g: _g, b: _b} = this.#rows[i].row[this.#width - j - 1].getColor();
-        this.#rows[i].row[this.#width - j - 1].setColor({r, g, b})
-        this.#rows[i].row[j].setColor({r: _r, g: _g, b: _b})
+  flipY = () => {
+    for (let i = 0; i < this.#rows.length; i++) {
+      for (let j = 0; j < Math.floor(this.#width / 2); j++) {
+        const { r, g, b } = this.#rows[i].row[j].getColor();
+        const {
+          r: _r,
+          g: _g,
+          b: _b,
+        } = this.#rows[i].row[this.#width - j - 1].getColor();
+        this.#rows[i].row[this.#width - j - 1].setColor({ r, g, b });
+        this.#rows[i].row[j].setColor({ r: _r, g: _g, b: _b });
       }
     }
-  }
+  };
 
-
-  flipX(){
-    for(let i = 0; i < Math.floor(this.#rows.length / 2); i++){
-      for(let j = 0; j < this.#width; j++){
-        const {r, g, b} = this.#rows[i].row[j].getColor();
-        const {r: _r, g: _g, b: _b} = this.#rows[this.#rows.length - i - 1].row[j].getColor();
-        this.#rows[this.#rows.length - i - 1].row[j].setColor({r, g, b})
-        this.#rows[i].row[j].setColor({r: _r, g: _g, b: _b})
+  flipX = () => {
+    for (let i = 0; i < Math.floor(this.#rows.length / 2); i++) {
+      for (let j = 0; j < this.#width; j++) {
+        const { r, g, b } = this.#rows[i].row[j].getColor();
+        const {
+          r: _r,
+          g: _g,
+          b: _b,
+        } = this.#rows[this.#rows.length - i - 1].row[j].getColor();
+        this.#rows[this.#rows.length - i - 1].row[j].setColor({ r, g, b });
+        this.#rows[i].row[j].setColor({ r: _r, g: _g, b: _b });
       }
     }
-  }
-
-
-
-
+  };
 
   transpose = () => {
-    // for (let i = 0; i < this.#width; i++){
-    //   for (let j = 0; j < i; j++){
-    //     const {r, g, b} = this.#rows[i].row[j].getColor();
-    //     const {r: _r, g: _g, b: _b} = this.#rows[j].row[i].getColor();
-    //     this.#rows[i].row[j].setColor({r: _r, g: _g, b: _b});
-    //     this.#rows[j].row[i].setColor({r, g, b})
-    //   }
-    // }
-    // const temp = this.#width;
-    // this.#width = this.#height;
-    // this.#height = temp;
     const pixelArrays = [];
-    for(let i = 0; i < this.#width; i++){
+    for (let i = 0; i < this.#width; i++) {
       const pixelArray = new PixelArray();
-      for(let j = 0; j < this.#height; j++){
-        const {r, g, b} = this.#rows[j].row[i].getColor();
+      for (let j = 0; j < this.#height; j++) {
+        const { r, g, b } = this.#rows[j].row[i].getColor();
         const pixel = new Pixel();
-        pixel.setColor({r, g, b})
-        pixelArray.push(pixel)
+        pixel.setColor({ r, g, b });
+        pixelArray.push(pixel);
       }
-      pixelArrays.push(pixelArray)
+      pixelArrays.push(pixelArray);
     }
 
     this.#rows = pixelArrays;
-    [this.#width, this.#height] = [this.#height, this.#width]
-  }
+    [this.#width, this.#height] = [this.#height, this.#width];
+  };
 
   rotateClockwise90 = () => {
-    console.log("Rotate")
-    this.transpose()
-    this.flipY()
-  }
+    this.transpose();
+    this.flipY();
+  };
 
-  rotateCounterClockwise90(){
-    this.transpose()
-    this.flipX()
-  }
+  rotateCounterClockwise90 = () => {
+    this.transpose();
+    this.flipX();
+  };
 
-  forEach(callback){
-    for (const pixelArray of this.#rows) {
-      for (const pixel of pixelArray.row) {
-        callback(pixel)
-      }
-    }
-  }
+  rotate180 = () => {
+    this.rotateClockwise90();
+    this.rotateClockwise90();
+  };
 
   #areMembersInvalid = () =>
     isNaN(this.#width) || isNaN(this.#height) || isNaN(this.#maxColorVal);
