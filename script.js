@@ -3,29 +3,21 @@ import PixelImage from "./PixelImage.js";
 const reader = new FileReader();
 let fileName = "";
 let currentImgFile = null;
+let currZoom = 1;
 
-const css_classes = {
-  NO_FILE_SELECTED: "no-file-selected",
+const ui = {
+  fileSaveBtn: document.getElementById("save-file-button"),
+  filePickerBtn: document.getElementById("file-picker"),
+  canvas: document.getElementById("canvas"),
 };
-const fileSaveBtn = document.getElementById("save-file-button");
-const filePickerBtn = document.getElementById("file-picker");
-const canvas = document.getElementById("canvas");
 
-canvas.addEventListener("mousewheel", handleMouseWheel);
-
-fileSaveBtn.addEventListener("click", (e) => {
+ui.fileSaveBtn.addEventListener("click", (e) => {
   saveImage(currentImgFile).then();
 });
 
-reader.addEventListener("load", ({ target }) => {
-  try {
-    handleImageLoad(target.result);
-    fileSaveBtn.removeAttribute("disabled");
-    canvas.parentElement.classList.remove(css_classes.NO_FILE_SELECTED);
-  } catch (e) {}
-});
+reader.addEventListener("load", handleImageLoad);
 
-filePickerBtn.addEventListener("change", ({ target }) => {
+ui.filePickerBtn.addEventListener("change", ({ target }) => {
   const file = target.files[0];
   fileName = file.name;
   updateFileNameUI(fileName);
@@ -36,21 +28,31 @@ function updateFileNameUI(name) {
   document.getElementById("file-name").innerText = `Editing: ${name}`;
 }
 
-function handleImageLoad(rawTextData) {
-  currentImgFile = new PixelImage(rawTextData);
-  generateToolsUI(currentImgFile);
-  draw();
+function handleImageLoad(event) {
+  try {
+    const textData = event.target.result;
+    currentImgFile = new PixelImage(textData);
+    updateUI(currentImgFile);
+    draw();
+  } catch (e) {
+    alert(e);
+  }
 }
 
-function generateToolsUI(image) {
+function updateUI(image) {
+  ui.fileSaveBtn.removeAttribute("disabled");
+  ui.canvas.parentElement.classList.remove("no-file-selected");
   const tools = document.getElementById("tools");
   tools.innerHTML = "";
+
   const buttons = [
     { text: "-90", onclick: image.rotateCounterClockwise90 },
     { text: "+180", onclick: image.rotate180 },
     { text: "+90", onclick: image.rotateClockwise90 },
-    { text: "Flip Vertically", onclick: image.flipY },
-    { text: "Flip Horizontally", onclick: image.flipX },
+    { text: "Flip Vertically", onclick: image.flipX },
+    { text: "Flip Horizontally", onclick: image.flipY },
+    { text: "-", onclick: () => changeZoomLevel(-1) },
+    { text: "+", onclick: () => changeZoomLevel(1) },
   ];
   buttons.forEach((button) => {
     const buttonElem = document.createElement("button");
@@ -65,20 +67,17 @@ function generateToolsUI(image) {
 
 function draw() {
   const { width, height } = currentImgFile.getDimensions();
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
+  ui.canvas.width = width;
+  ui.canvas.height = height;
+  const ctx = ui.canvas.getContext("2d");
   const imageData = currentImgFile.getImageData();
   ctx.putImageData(imageData, 0, 0);
 }
 
-let current = 1;
-
-function handleMouseWheel(e) {
-  const i = e.deltaY < 0 ? 1 : -1;
-  if (current === 1 && i === -1) return;
-  current += i;
-  canvas.style.transform = `scale(${current},${current})`;
+function changeZoomLevel(sign) {
+  if (currZoom === 1 && sign === -1) return;
+  currZoom += sign;
+  ui.canvas.style.transform = `scale(${currZoom},${currZoom})`;
 }
 
 async function saveImage(pixelImage) {

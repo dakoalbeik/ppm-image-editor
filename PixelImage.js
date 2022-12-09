@@ -12,11 +12,7 @@ export default class PixelImage {
   #rows = [];
 
   constructor(rawData) {
-    try {
-      this.parseRawData(rawData);
-    } catch (e) {
-      alert(e);
-    }
+    this.parseRawData(rawData);
   }
 
   parseRawData(rawTextData) {
