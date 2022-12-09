@@ -91,3 +91,18 @@ body {
 #content:not(.no-file-selected) #no-file-sign {
   display: none;
 }
+
+#tools {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 0.5rem;
+
+}
+
+#tools > * {
+  padding: 0.1rem 0.5rem;
+  outline: none;
+  cursor: pointer;
+  transition: 150ms;
+}

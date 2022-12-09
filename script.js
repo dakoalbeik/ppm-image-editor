@@ -4,17 +4,46 @@ const reader = new FileReader();
 let fileName = "";
 let currentImgFile = null;
 
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter"){
-    console.log("FlipY")
-    currentImgFile.flipX()
-    draw()
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    console.log("FlipY");
+    currentImgFile.rotateClockwise90();
+    draw();
   }
-})
+});
+
+function generateToolsUI(image) {
+  const buttons = [{ text: "-180", onclick: image.rotateClockwise90 }];
+}
+
+function getCallbacks(image) {
+  return [
+    image.rotateClockwise90,
+    image.rotateClockwise90,
+    image.rotateClockwise90,
+    image.rotateClockwise90,
+    image.rotateClockwise90,
+    image.rotateClockwise90,
+  ];
+}
+
+function addEventListeners(image) {
+  let callbacks = getCallbacks(image);
+  const toolButtons = [...document.getElementById("tools").children];
+  toolButtons.forEach((htmlElem, i) => {
+    htmlElem.removeEventListener(callbacks[i]);
+  });
+  toolButtons.forEach((htmlElem, i) => {
+    htmlElem.addEventListener("click", () => {
+      callbacks[i]();
+      draw();
+    });
+  });
+}
 
 const css_classes = {
-  NO_FILE_SELECTED: 'no-file-selected'
-}
+  NO_FILE_SELECTED: "no-file-selected",
+};
 const fileSaveBtn = document.getElementById("save-file-button");
 const filePickerBtn = document.getElementById("file-picker");
 const canvas = document.getElementById("canvas");
@@ -29,7 +58,7 @@ reader.addEventListener("load", ({ target }) => {
   try {
     handleImageLoad(target.result);
     fileSaveBtn.removeAttribute("disabled");
-    canvas.parentElement.classList.remove(css_classes.NO_FILE_SELECTED)
+    canvas.parentElement.classList.remove(css_classes.NO_FILE_SELECTED);
   } catch (e) {}
 });
 
@@ -39,16 +68,18 @@ filePickerBtn.addEventListener("change", ({ target }) => {
   updateFileNameUI(fileName);
   reader.readAsText(file);
 });
+
 function updateFileNameUI(name) {
   document.getElementById("file-name").innerText = `Editing: ${name}`;
 }
 
 function handleImageLoad(rawTextData) {
   currentImgFile = new PixelImage(rawTextData);
+  addEventListeners(currentImgFile);
   draw();
 }
 
-function draw(){
+function draw() {
   const { width, height } = currentImgFile.getDimensions();
   canvas.width = width;
   canvas.height = height;
@@ -58,6 +89,7 @@ function draw(){
 }
 
 let current = 1;
+
 function handleMouseWheel(e) {
   const i = e.deltaY < 0 ? 1 : -1;
   if (current === 1 && i === -1) return;
@@ -78,4 +110,3 @@ async function saveImage(pixelImage) {
     alert(`${fileName} saved locally!`);
   } catch (e) {}
 }
-

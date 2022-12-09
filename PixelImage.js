@@ -116,6 +116,49 @@ export default class PixelImage {
     }
   }
 
+
+
+
+
+  transpose = () => {
+    // for (let i = 0; i < this.#width; i++){
+    //   for (let j = 0; j < i; j++){
+    //     const {r, g, b} = this.#rows[i].row[j].getColor();
+    //     const {r: _r, g: _g, b: _b} = this.#rows[j].row[i].getColor();
+    //     this.#rows[i].row[j].setColor({r: _r, g: _g, b: _b});
+    //     this.#rows[j].row[i].setColor({r, g, b})
+    //   }
+    // }
+    // const temp = this.#width;
+    // this.#width = this.#height;
+    // this.#height = temp;
+    const pixelArrays = [];
+    for(let i = 0; i < this.#width; i++){
+      const pixelArray = new PixelArray();
+      for(let j = 0; j < this.#height; j++){
+        const {r, g, b} = this.#rows[j].row[i].getColor();
+        const pixel = new Pixel();
+        pixel.setColor({r, g, b})
+        pixelArray.push(pixel)
+      }
+      pixelArrays.push(pixelArray)
+    }
+
+    this.#rows = pixelArrays;
+    [this.#width, this.#height] = [this.#height, this.#width]
+  }
+
+  rotateClockwise90 = () => {
+    console.log("Rotate")
+    this.transpose()
+    this.flipY()
+  }
+
+  rotateCounterClockwise90(){
+    this.transpose()
+    this.flipX()
+  }
+
   forEach(callback){
     for (const pixelArray of this.#rows) {
       for (const pixel of pixelArray.row) {
