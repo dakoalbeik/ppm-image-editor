@@ -70,14 +70,15 @@ function draw() {
   const { width, height } = currentImgFile.getDimensions();
   ui.canvas.width = width;
   ui.canvas.height = height;
-  const isLandspace = width >= height;
-  if (isLandspace) {
+  const isLandscape = width >= height;
+  if (isLandscape) {
     ui.canvas.style.width = "50%";
     ui.canvas.style.height = "";
   } else {
     ui.canvas.style.height = "80%";
     ui.canvas.style.width = "";
   }
+  document.getElementById("dimensions").innerText = `${width}px ⨉ ${height}px`;
   const ctx = ui.canvas.getContext("2d");
   const imageData = currentImgFile.getImageData();
   ctx.putImageData(imageData, 0, 0);
