@@ -1,4 +1,4 @@
-export default class PixelArray {
+class PixelArray {
   constructor(row = []) {
     this.row = row;
   }

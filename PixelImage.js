@@ -1,7 +1,4 @@
-import PixelArray from "./PixelArray.js";
-import Pixel from "./Pixel.js";
-
-export default class PixelImage {
+class PixelImage {
   static PPM_TYPE = "P3";
   static WIDTH_IDX = 0;
   static HEIGHT_IDX = 1;

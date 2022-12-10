@@ -1,5 +1,3 @@
-import PixelImage from "./PixelImage.js";
-
 const reader = new FileReader();
 let fileName = "";
 let currentImgFile = null;
@@ -97,7 +95,7 @@ function changeZoomLevel(sign) {
 async function saveImage(pixelImage) {
   try {
     const fileHandle = await window.showSaveFilePicker({
-      suggestedName: `${fileName}`,
+      suggestedName: fileName,
     });
     const fileStream = await fileHandle.createWritable();
     await fileStream.write(
@@ -105,5 +103,19 @@ async function saveImage(pixelImage) {
     );
     await fileStream.close();
     alert(`${fileName} saved locally!`);
-  } catch (e) {}
+  } catch (e) {
+    try {
+      const link = document.createElement("a");
+      const file = new Blob([pixelImage.toString()], { type: "text/plain" });
+      link.href = URL.createObjectURL(file);
+      link.download = fileName;
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+    } catch (e) {
+      alert(
+        "Browser does not support downloads. Please try this application in Chrome."
+      );
+    }
+  }
 }

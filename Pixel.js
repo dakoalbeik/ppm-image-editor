@@ -1,4 +1,4 @@
-export default class Pixel {
+class Pixel {
   constructor(r, g, b) {
     this.r = r;
     this.g = g;
@@ -11,7 +11,7 @@ export default class Pixel {
     if (b !== undefined) this.b = b;
   }
 
-  getColor(){
-    return {r: this.r, g: this.g, b: this.b}
+  getColor() {
+    return { r: this.r, g: this.g, b: this.b };
   }
 }
