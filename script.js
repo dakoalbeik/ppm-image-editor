@@ -18,10 +18,14 @@ ui.fileSaveBtn.addEventListener("click", (e) => {
 reader.addEventListener("load", handleImageLoad);
 
 ui.filePickerBtn.addEventListener("change", ({ target }) => {
-  const file = target.files[0];
-  fileName = file.name;
-  updateFileNameUI(fileName);
-  reader.readAsText(file);
+  try {
+    const file = target.files[0];
+    fileName = file.name;
+    updateFileNameUI(fileName);
+    reader.readAsText(file);
+  } catch (e) {
+    //  do nothing if user cancels
+  }
 });
 
 function updateFileNameUI(name) {
