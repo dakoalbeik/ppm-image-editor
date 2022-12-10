@@ -90,7 +90,7 @@ function draw() {
 
 function changeZoomLevel(sign) {
   if (currZoom === 1 && sign === -1) return;
-  currZoom += sign;
+  currZoom += sign * 3;
   ui.canvas.style.transform = `scale(${currZoom},${currZoom})`;
 }
 
