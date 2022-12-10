@@ -42,6 +42,7 @@ function handleImageLoad(event) {
 function updateUI(image) {
   ui.fileSaveBtn.removeAttribute("disabled");
   ui.canvas.parentElement.classList.remove("no-file-selected");
+
   const tools = document.getElementById("tools");
   tools.innerHTML = "";
 
@@ -69,6 +70,14 @@ function draw() {
   const { width, height } = currentImgFile.getDimensions();
   ui.canvas.width = width;
   ui.canvas.height = height;
+  const isLandspace = width >= height;
+  if (isLandspace) {
+    ui.canvas.style.width = "50%";
+    ui.canvas.style.height = "";
+  } else {
+    ui.canvas.style.height = "80%";
+    ui.canvas.style.width = "";
+  }
   const ctx = ui.canvas.getContext("2d");
   const imageData = currentImgFile.getImageData();
   ctx.putImageData(imageData, 0, 0);

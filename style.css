@@ -14,6 +14,7 @@ body {
 
 #top-bar {
     height: 5rem;
+    min-height: 5rem;
     background: deepskyblue;
     display: flex;
     align-items: center;
@@ -63,20 +64,22 @@ body {
     overflow: hidden;
 }
 
-#canvas {
-    border: 1px solid black;
-    image-rendering: pixelated;
-    height: 80%;
-
-}
 
 #content {
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #d9e1e5;
     flex-grow: 1;
     overflow: auto;
 }
+
+#canvas {
+    border: 1px solid black;
+    image-rendering: pixelated;
+
+}
+
 
 #buttons button:disabled {
     background: hsl(170, 50%, 60%);
