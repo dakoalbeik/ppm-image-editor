@@ -1,18 +1,40 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>PPM</title>
-    <script src="./script.js" defer></script>
+    <meta charset="UTF-8"/>
+    <meta
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+            name="viewport"
+    />
+    <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+    <title>PPM Image Editor</title>
+
+    <script defer src="./Pixel.js"></script>
+    <script defer src="./PixelArray.js"></script>
+    <script defer src="./PixelImage.js"></script>
+    <script defer src="./script.js"></script>
+    <link href="style.css" rel="stylesheet"/>
 </head>
 <body>
 <div id="top-bar">
-    <input type="file" id="file-picker"/>
-    <button id="save-file-button">Save File</button>
+    <div id="file-info">
+        <span id="file-name"></span>
+        <span id="dimensions"></span>
+    </div>
+    <div id="tools"></div>
+    <div id="buttons">
+        <label for="file-picker-input" id="file-picker">
+            <span>Choose File</span>
+            <input id="file-picker-input" type="file"/>
+        </label>
+        <button disabled id="save-file-button">
+            <span>Save File</span>
+        </button>
+    </div>
 </div>
+<div class="no-file-selected" id="content">
     <canvas id="canvas"></canvas>
+    <p id="no-file-sign">No file selected</p>
+</div>
 </body>
 </html>

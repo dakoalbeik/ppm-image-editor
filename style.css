@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Calibri, serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background: aliceblue;
+    display: flex;
+    flex-direction: column;
+}
+
+#top-bar {
+    height: 5rem;
+    min-height: 5rem;
+    background: deepskyblue;
+    display: flex;
+    align-items: center;
+}
+
+#buttons {
+    width: 20rem;
+    height: 80%;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-left: 1px solid #e3e3e3;
+}
+
+#buttons > * {
+    height: 2.5rem;
+    width: 7rem;
+    border: none;
+    outline: none;
+    background: antiquewhite;
+    border-radius: 5px;
+    display: grid;
+    place-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    transition-duration: 150ms;
+    box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+#buttons > *:hover {
+    background: rgba(250, 235, 215, 0.88);
+}
+
+#buttons > *:active {
+    outline: 2px solid red;
+}
+
+#file-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 2rem;
+    color: black;
+}
+
+
+#file-picker-input {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #d9e1e5;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+#canvas {
+    border: 1px solid black;
+    image-rendering: pixelated;
+
+}
+
+
+#buttons button:disabled {
+    background: hsl(170, 50%, 60%);
+    cursor: not-allowed;
+}
+
+#buttons button:disabled:active {
+    outline: none;
+}
+
+#content.no-file-selected canvas {
+    display: none;
+}
+
+#content:not(.no-file-selected) #no-file-sign {
+    display: none;
+}
+
+#tools {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 0.5rem;
+
+}
+
+#tools > * {
+    padding: 0.1rem 0.5rem;
+    outline: none;
+    cursor: pointer;
+    transition: 150ms;
+}
