@@ -104,6 +104,8 @@ async function saveImage(pixelImage) {
     await fileStream.close();
     alert(`${fileName} saved locally!`);
   } catch (e) {
+    if (e?.name === "AbortError") return;
+    // if window.showSaveFilePicker is not supported then download it through an anchor tag
     try {
       const link = document.createElement("a");
       const file = new Blob([pixelImage.toString()], { type: "text/plain" });
